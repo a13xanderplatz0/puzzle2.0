@@ -1,4 +1,9 @@
 #include <iostream>
+#include <random>//para genrar numeros aleatorios
+#include <algorithm>//para std::random_shuffle
+#include <vector>//para std::vector
+/*ya no se usa #include<cstdlib> rand()  y#include<ctime> time()
+es obsoleto */
 // Hello World program 
 // ANSI Codes
 // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
@@ -85,33 +90,86 @@ switch(movimiento)
         }
         break;
         
-    case 'a': case 'A':    // Corregido: punto eliminado y dos casos en una línea
+    case 'a': case 'A':    
         if(columna > 0)
         {
-            std::swap(tablero[espacio][columna], tablero[espacio][columna - 1]); // Corregido: índices para movimiento horizontal
+            std::swap(tablero[espacio][columna], tablero[espacio][columna - 1]); 
         }
         break;
         
     case 'd': case 'D':    
         if(columna < 2)
         {
-            std::swap(tablero[espacio][columna], tablero[espacio][columna + 1]); // Corregido: índices para movimiento horizontal
+            std::swap(tablero[espacio][columna], tablero[espacio][columna + 1]); 
         }
         break;
 }
 }
-
+bool definir_ganador(int tablero[3][3])  // Cambié el nombre del parámetro
+{
+    // Definimos el tablero objetivo (estado ganador)
+    const int tablero_objetivo[3][3] = {
+        {1,2,3},
+        {4,5,6},
+        {7,8,9}
+    };
+    
+    // Comparamos cada posición
+    for(int i = 0; i < 3; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            if(tablero[i][j] != tablero_objetivo[i][j])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 
 int main()
 {
     mostrar_caratula();
-    int tablero[3][3]={{1,2,3},{4,5,6},{7,8,9}};
+    //crear un vector con numeros del 1 al 8
+    std::vector<int> numeros ={1,2,3,4,5,6,7,8};
+    //crear generdor de numeros aleatorios
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    //mezclar los numeros aleatoriamente
+    std::shuffle(numeros.begin(),numeros.end(),gen);
+
+    //crear el tablero con los numeros mezclados y el 9 estara fijo
+    int tablero[3][3];
+    int k=0;
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            if(i==2 && j==2)
+            {
+                tablero[i][j]=9;
+            }
+            else
+            {
+                tablero[i][j]=numeros[k++];
+            }
+        }
+    }
+
+
     char tecla;
     
     while(true) {
         imprimirtablero(tablero);
-        std::cout << "\nUsa WASD para mover el espacio (Q para salir): ";
+        //verificar si gano
+        if(definir_ganador(tablero))
+        {
+            std::cout<<"\nFELICITACIONES USTED GANO\n";
+            break;
+        }
+        std::cout << "\nUsa W-A-S-D para mover el espacio (Q para salir): ";
         std::cin >> tecla;
         
         if(tecla == 'q' || tecla == 'Q') 
