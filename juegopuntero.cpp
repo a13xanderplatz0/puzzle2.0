@@ -2,7 +2,7 @@
 #include <random>
 #include <algorithm>
 #include <vector>
-#include <cstdlib>
+#include <cstdlib>//
 
 #ifdef _WIN32
     //#include <windows.h>//solo para windows aunque lo comente o borre igual va funcionar
